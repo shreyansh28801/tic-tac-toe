@@ -97,7 +97,7 @@ function Leaderboard({ onBack, currentPlayerName }) {
         </div>
       )}
 
-      {/* Leaderboard Table */}
+      {/* Leaderboard Content */}
       {loading ? (
         <div className="text-center py-12">
           <div className="animate-spin rounded-full h-12 w-12 border-4 border-purple-500 border-t-transparent mx-auto"></div>
@@ -115,91 +115,179 @@ function Leaderboard({ onBack, currentPlayerName }) {
           <p className="text-white/70 text-lg">No players yet. Be the first to play!</p>
         </div>
       ) : (
-        <div className="overflow-x-auto">
-          <table className="w-full">
-            <thead>
-              <tr className="border-b-2 border-white/30 bg-white/5">
-                <th className="text-left text-white font-bold py-4 px-2">Rank</th>
-                <th className="text-left text-white font-bold py-4 px-4">Player</th>
-                <th className="text-center text-white font-bold py-4 px-2 hidden sm:table-cell">
-                  <div>Total</div>
-                  <div className="text-xs font-normal text-white/60">Games</div>
-                </th>
-                <th className="text-center text-white font-bold py-4 px-2">
-                  <div>Win/Defeat/Draw</div>
-                  <div className="text-xs font-normal text-white/60">(Total)</div>
-                </th>
-                <th className="text-center text-white font-bold py-4 px-2">
-                  <div>Win %</div>
-                </th>
-                <th className="text-center text-white font-bold py-4 px-2">
-                  <div>Total</div>
-                  <div className="text-xs font-normal text-white/60">Points</div>
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {leaderboard.map((player, index) => {
-                const isCurrentPlayer = player.playerName === currentPlayerName;
-                return (
-                  <tr
-                    key={player.playerName + '-' + index}
-                    className={`border-b border-white/10 hover:bg-white/5 transition-colors ${
-                      isCurrentPlayer ? 'bg-purple-500/20 border-purple-500/50' : ''
-                    }`}
-                  >
-                    <td className="py-4 px-2">
+        <>
+          {/* Mobile Card View */}
+          <div className="block md:hidden space-y-3">
+            {leaderboard.map((player, index) => {
+              const isCurrentPlayer = player.playerName === currentPlayerName;
+              return (
+                <div
+                  key={player.playerName + '-' + index}
+                  className={`p-4 rounded-lg border-2 transition-all ${
+                    isCurrentPlayer 
+                      ? 'bg-purple-500/20 border-purple-500' 
+                      : 'bg-white/5 border-white/10'
+                  }`}
+                >
+                  {/* Rank and Player Name */}
+                  <div className="flex items-center justify-between mb-3">
+                    <div className="flex items-center gap-3">
                       <span className={`font-bold ${
-                        player.rank <= 3 ? 'text-2xl' : 'text-white'
+                        player.rank <= 3 ? 'text-3xl' : 'text-2xl text-white'
                       }`}>
                         {getMedalEmoji(player.rank)}
                       </span>
-                    </td>
-                    <td className="py-4 px-4">
-                      <div className="flex items-center gap-2">
-                        <span className="text-white font-semibold truncate max-w-[150px]">
+                      <div>
+                        <div className="text-white font-bold text-lg">
                           {player.playerName}
-                        </span>
+                        </div>
                         {isCurrentPlayer && (
-                          <span className="text-xs bg-purple-600 text-white px-2 py-1 rounded">
+                          <span className="text-xs bg-purple-600 text-white px-2 py-1 rounded inline-block mt-1">
                             You
                           </span>
                         )}
                       </div>
-                    </td>
-                    <td className="text-center text-white/80 py-4 px-2 hidden sm:table-cell">
-                      <span className="text-xl font-bold text-white">{player.gamesPlayed}</span>
-                    </td>
-                    <td className="text-center py-4 px-2">
-                      <div className="flex flex-col sm:flex-row gap-1 sm:gap-2 text-sm justify-center items-center">
-                        <div className="flex items-center gap-1">
-                          <span className="text-green-400 font-bold text-lg">{player.wins}</span>
-                          <span className="text-xs text-green-400/60">W</span>
-                        </div>
-                        <span className="text-white/40 hidden sm:inline">/</span>
-                        <div className="flex items-center gap-1">
-                          <span className="text-red-400 font-bold text-lg">{player.losses}</span>
-                          <span className="text-xs text-red-400/60">L</span>
-                        </div>
-                        <span className="text-white/40 hidden sm:inline">/</span>
-                        <div className="flex items-center gap-1">
-                          <span className="text-yellow-400 font-bold text-lg">{player.draws}</span>
-                          <span className="text-xs text-yellow-400/60">D</span>
-                        </div>
+                    </div>
+                    <div className="text-right">
+                      <div className="text-2xl font-bold text-white">
+                        {player.points}
                       </div>
-                    </td>
-                    <td className={`text-center py-4 px-2 font-bold text-xl ${getWinRateColor(player.winRate)}`}>
-                      {player.winRate}%
-                    </td>
-                    <td className="text-center text-white font-bold py-4 px-2 text-2xl">
-                      {player.points}
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
-        </div>
+                      <div className="text-xs text-white/60">Points</div>
+                    </div>
+                  </div>
+
+                  {/* Stats Grid */}
+                  <div className="grid grid-cols-2 gap-3">
+                    {/* Games Played */}
+                    <div className="bg-white/5 rounded-lg p-2 text-center">
+                      <div className="text-white font-bold text-xl">
+                        {player.gamesPlayed}
+                      </div>
+                      <div className="text-xs text-white/60">Games</div>
+                    </div>
+
+                    {/* Win Rate */}
+                    <div className="bg-white/5 rounded-lg p-2 text-center">
+                      <div className={`font-bold text-xl ${getWinRateColor(player.winRate)}`}>
+                        {player.winRate}%
+                      </div>
+                      <div className="text-xs text-white/60">Win Rate</div>
+                    </div>
+                  </div>
+
+                  {/* W/L/D Stats */}
+                  <div className="flex justify-around mt-3 pt-3 border-t border-white/10">
+                    <div className="text-center">
+                      <div className="text-green-400 font-bold text-xl">
+                        {player.wins}
+                      </div>
+                      <div className="text-xs text-green-400/70">Wins</div>
+                    </div>
+                    <div className="text-center">
+                      <div className="text-red-400 font-bold text-xl">
+                        {player.losses}
+                      </div>
+                      <div className="text-xs text-red-400/70">Defeats</div>
+                    </div>
+                    <div className="text-center">
+                      <div className="text-yellow-400 font-bold text-xl">
+                        {player.draws}
+                      </div>
+                      <div className="text-xs text-yellow-400/70">Draws</div>
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+
+          {/* Desktop Table View */}
+          <div className="hidden md:block overflow-x-auto">
+            <table className="w-full">
+              <thead>
+                <tr className="border-b-2 border-white/30 bg-white/5">
+                  <th className="text-left text-white font-bold py-4 px-2">Rank</th>
+                  <th className="text-left text-white font-bold py-4 px-4">Player</th>
+                  <th className="text-center text-white font-bold py-4 px-2">
+                    <div>Total</div>
+                    <div className="text-xs font-normal text-white/60">Games</div>
+                  </th>
+                  <th className="text-center text-white font-bold py-4 px-2">
+                    <div>Win/Defeat/Draw</div>
+                    <div className="text-xs font-normal text-white/60">(Total)</div>
+                  </th>
+                  <th className="text-center text-white font-bold py-4 px-2">
+                    <div>Win %</div>
+                  </th>
+                  <th className="text-center text-white font-bold py-4 px-2">
+                    <div>Total</div>
+                    <div className="text-xs font-normal text-white/60">Points</div>
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {leaderboard.map((player, index) => {
+                  const isCurrentPlayer = player.playerName === currentPlayerName;
+                  return (
+                    <tr
+                      key={player.playerName + '-' + index}
+                      className={`border-b border-white/10 hover:bg-white/5 transition-colors ${
+                        isCurrentPlayer ? 'bg-purple-500/20 border-purple-500/50' : ''
+                      }`}
+                    >
+                      <td className="py-4 px-2">
+                        <span className={`font-bold ${
+                          player.rank <= 3 ? 'text-2xl' : 'text-white'
+                        }`}>
+                          {getMedalEmoji(player.rank)}
+                        </span>
+                      </td>
+                      <td className="py-4 px-4">
+                        <div className="flex items-center gap-2">
+                          <span className="text-white font-semibold truncate max-w-[150px]">
+                            {player.playerName}
+                          </span>
+                          {isCurrentPlayer && (
+                            <span className="text-xs bg-purple-600 text-white px-2 py-1 rounded">
+                              You
+                            </span>
+                          )}
+                        </div>
+                      </td>
+                      <td className="text-center text-white/80 py-4 px-2">
+                        <span className="text-xl font-bold text-white">{player.gamesPlayed}</span>
+                      </td>
+                      <td className="text-center py-4 px-2">
+                        <div className="flex gap-2 text-sm justify-center items-center">
+                          <div className="flex items-center gap-1">
+                            <span className="text-green-400 font-bold text-lg">{player.wins}</span>
+                            <span className="text-xs text-green-400/60">W</span>
+                          </div>
+                          <span className="text-white/40">/</span>
+                          <div className="flex items-center gap-1">
+                            <span className="text-red-400 font-bold text-lg">{player.losses}</span>
+                            <span className="text-xs text-red-400/60">L</span>
+                          </div>
+                          <span className="text-white/40">/</span>
+                          <div className="flex items-center gap-1">
+                            <span className="text-yellow-400 font-bold text-lg">{player.draws}</span>
+                            <span className="text-xs text-yellow-400/60">D</span>
+                          </div>
+                        </div>
+                      </td>
+                      <td className={`text-center py-4 px-2 font-bold text-xl ${getWinRateColor(player.winRate)}`}>
+                        {player.winRate}%
+                      </td>
+                      <td className="text-center text-white font-bold py-4 px-2 text-2xl">
+                        {player.points}
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+        </>
       )}
 
       {/* Legend */}
