@@ -1,0 +1,33 @@
+version: '3.8'
+
+services:
+  server:
+    build: ./server
+    container_name: tic-tac-toe-server
+    ports:
+      - "3001:3001"
+    environment:
+      - NODE_ENV=production
+      - PORT=3001
+      - CLIENT_URL=http://localhost
+    restart: unless-stopped
+    networks:
+      - tic-tac-toe-network
+
+  client:
+    build: ./client
+    container_name: tic-tac-toe-client
+    ports:
+      - "80:80"
+    environment:
+      - VITE_SERVER_URL=http://localhost:3001
+    depends_on:
+      - server
+    restart: unless-stopped
+    networks:
+      - tic-tac-toe-network
+
+networks:
+  tic-tac-toe-network:
+    driver: bridge
+
