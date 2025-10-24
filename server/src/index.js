@@ -90,11 +90,13 @@ app.get('/api/leaderboard/stats', (req, res) => {
 
 // Start server
 const PORT = process.env.PORT || 3001;
-httpServer.listen(PORT, () => {
+const HOST = process.env.HOST || '0.0.0.0';
+httpServer.listen(PORT, HOST, () => {
   console.log(`
 ╔════════════════════════════════════════════╗
 ║   🎮 Tic-Tac-Toe Server Running           ║
 ║   Port: ${PORT}                              ║
+║   Host: ${HOST}                              ║
 ║   Environment: ${process.env.NODE_ENV || 'development'}              ║
 ║   Time: ${new Date().toLocaleString()}     ║
 ╚════════════════════════════════════════════╝
