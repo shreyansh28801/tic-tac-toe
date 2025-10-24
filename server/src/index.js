@@ -46,11 +46,30 @@ const leaderboardManager = new LeaderboardManager();
 // Setup socket handlers
 setupSocketHandlers(io, gameManager, leaderboardManager);
 
+// Root endpoint
+app.get('/', (req, res) => {
+  res.json({ 
+    message: '🎮 Tic-Tac-Toe Server API',
+    version: '1.0.0',
+    status: 'online',
+    endpoints: {
+      health: '/health',
+      stats: '/api/stats',
+      leaderboard: '/api/leaderboard',
+      topPlayers: '/api/leaderboard/top',
+      player: '/api/player/:playerName',
+      leaderboardStats: '/api/leaderboard/stats'
+    },
+    timestamp: new Date().toISOString()
+  });
+});
+
 // Health check endpoint
 app.get('/health', (req, res) => {
   res.json({ 
     status: 'OK', 
     timestamp: new Date().toISOString(),
+    uptime: process.uptime(),
     stats: gameManager.getStats()
   });
 });
