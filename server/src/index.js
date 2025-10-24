@@ -91,6 +91,12 @@ app.get('/api/leaderboard/stats', (req, res) => {
 // Start server
 const PORT = process.env.PORT || 3001;
 const HOST = process.env.HOST || '0.0.0.0';
+
+console.log('🔍 Environment check:');
+console.log('PORT from env:', process.env.PORT);
+console.log('PORT to use:', PORT);
+console.log('HOST to use:', HOST);
+
 httpServer.listen(PORT, HOST, () => {
   console.log(`
 ╔════════════════════════════════════════════╗
@@ -101,6 +107,7 @@ httpServer.listen(PORT, HOST, () => {
 ║   Time: ${new Date().toLocaleString()}     ║
 ╚════════════════════════════════════════════╝
   `);
+  console.log(`✅ Server is listening on ${HOST}:${PORT}`);
 });
 
 // Graceful shutdown
