@@ -40,14 +40,12 @@ firebase-adminsdk.json
 Thumbs.db
 
 # markdown files
-*.md
+# Keep README.md but ignore other markdown files
 *.markdown
 *.mdown
 *.mkdn
 *.mkd
 *.mdwn
-*.mdtxt
-*.mdtext
 *.mdtxt
 *.mdtext
 

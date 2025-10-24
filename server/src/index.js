@@ -14,26 +14,44 @@ const httpServer = createServer(app);
 
 // CORS configuration
 const allowedOrigins = [
-  process.env.CLIENT_URL || 'http://localhost:5173',
   'http://localhost:5173',
   'http://localhost:5174',
   'http://192.168.1.5:5173',
   'http://127.0.0.1:5173',
   'https://tic-tac-toe-fe-4woa.onrender.com',  // Frontend on Render
-  /\.onrender\.com$/,  // Allow all Render subdomains for development
 ];
 
-app.use(cors({
-  origin: allowedOrigins,
+// CORS origin checker - allows listed origins and any Render subdomain
+const corsOptions = {
+  origin: (origin, callback) => {
+    // Allow requests with no origin (like mobile apps or curl)
+    if (!origin) return callback(null, true);
+    
+    // Check if origin is in allowed list or ends with .onrender.com
+    if (allowedOrigins.includes(origin) || origin.endsWith('.onrender.com')) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
   credentials: true
-}));
+};
+
+app.use(cors(corsOptions));
 
 app.use(express.json());
 
 // Socket.io setup
 const io = new Server(httpServer, {
   cors: {
-    origin: allowedOrigins,
+    origin: (origin, callback) => {
+      if (!origin) return callback(null, true);
+      if (allowedOrigins.includes(origin) || origin.endsWith('.onrender.com')) {
+        callback(null, true);
+      } else {
+        callback(new Error('Not allowed by CORS'));
+      }
+    },
     methods: ['GET', 'POST'],
     credentials: true
   }
