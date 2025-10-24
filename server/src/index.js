@@ -17,8 +17,10 @@ const allowedOrigins = [
   process.env.CLIENT_URL || 'http://localhost:5173',
   'http://localhost:5173',
   'http://localhost:5174',
-  'http://192.168.1.5:5173',  // Add your local network IP
+  'http://192.168.1.5:5173',
   'http://127.0.0.1:5173',
+  'https://tic-tac-toe-fe-4woa.onrender.com',  // Frontend on Render
+  /\.onrender\.com$/,  // Allow all Render subdomains for development
 ];
 
 app.use(cors({
